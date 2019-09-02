@@ -1,0 +1,29 @@
+from django.test import TestCase
+from django.test.client import RequestFactory
+from django.urls.base import reverse
+from .views import MovieList
+from .models import Movie
+
+
+class MovieListPaginationTestCase(TestCase):
+    ACTIVE_PAGINATION_HTML = '''
+        <li class = 'page-item active'>
+            <a href='{}?page={}' class='page-link'>{}</a>
+        </li>
+    '''
+
+    def setUp(self):
+        for n in range(15):
+            Movie.objects.create(title='Title {}'.format(n), plot='Text', year=1990 + n, runtime=100)
+
+    def testFirstPage(self):
+        movie_list_path = reverse('movie:movie_list')
+        request = RequestFactory().get(path=movie_list_path)
+        response = MovieList.as_view()(request)
+        self.assertEqual(200, response.status_code)
+        self.assertTrue(response.context_data['is_paginated'])
+        self.assertInHTML(
+            self.ACTIVE_PAGINATION_HTML.format(
+                movie_list_path, 1, 1
+            ),
+            response.rendered_content)

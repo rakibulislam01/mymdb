@@ -22,13 +22,15 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = (os.environ.get('DEBUG_VALUE') == 'True')
+# DEBUG = (os.environ.get('DEBUG_VALUE') == 'True')
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
 INSTALLED_APPS = [
+    'movie.apps.MovieConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -74,8 +76,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'mymdb',
-        'USER': 'newuser',
-        'PASSWORD': 'test123456',
+        'USER': os.environ.get("USER"),
+        'PASSWORD': os.environ.get("PASSWORD"),
         'HOST': '127.0.0.1',  # localhost
         'PORT': '5432',  # 5432
     }
