@@ -19,8 +19,15 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 
+MEDIA_FILE_PATHS = static(settings.MEDIA_URL,
+                          document_root=settings.MEDIA_ROOT)
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('user/', include('user.urls', namespace='user')),
     path('', include('movie.urls', namespace='movie')),
-]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+]+ MEDIA_FILE_PATHS
+
+# if settings.DEBUG:
+#     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+#     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

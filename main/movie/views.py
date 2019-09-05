@@ -9,7 +9,7 @@ from django.views.generic import (
     UpdateView
 )
 
-from .form import VoteForm
+from .form import VoteForm, MovieImageForm
 from .models import Movie, Person, Vote
 
 
@@ -19,12 +19,13 @@ class MovieList(ListView):
 
 
 class MovieDetail(DetailView):
-    # model = Movie
     queryset = (Movie.objects.all_with_related_persons_and_score())
-    print(queryset)
+
+    # print(queryset)
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
+        ctx['image_form'] = self.movie_image_form()
         if self.request.user.is_authenticated:
             vote = Vote.objects.get_vote_or_unsaved_blank_vote(
                 movie=self.object,
@@ -50,6 +51,11 @@ class MovieDetail(DetailView):
             ctx['vote_form_url'] = vote_form_url
         return ctx
 
+    def movie_image_form(self):
+        if self.request.user.is_authenticated:
+            return MovieImageForm()
+        return None
+
 
 class PersonDetail(DetailView):
     queryset = Person.objects.all_with_prefetch_movies()
@@ -62,7 +68,6 @@ class CreateVote(LoginRequiredMixin, CreateView):
         initial = super().get_initial()
         initial['user'] = self.request.user.id
         initial['movie'] = self.kwargs['movie_id']
-        print(initial)
         return initial
 
     def get_success_url(self):
@@ -103,3 +108,23 @@ class UpdateVote(LoginRequiredMixin, UpdateView):
             'movie:movie_detail', kwargs={'pk': movie_id}
         )
         return redirect(to=movie_detail_url)
+
+
+class MovieImageUpload(LoginRequiredMixin, CreateView):
+    form_class = MovieImageForm
+
+    def get_initial(self):
+        initial = super().get_initial()
+        initial['user'] = self.request.user.id
+        initial['movie'] = self.kwargs['movie_id']
+        return initial
+
+    def render_to_response(self, context, **response_kwargs):
+        movie_id = self.kwargs['movie_id']
+        movie_detail_url = reverse('movie:movie_detail', kwargs={'pk': movie_id})
+        return redirect(to=movie_detail_url)
+
+    def get_success_url(self):
+        movie_id = self.kwargs['movie_id']
+        movie_detail_url = reverse('movie:movie_detail', kwargs={'pk': movie_id})
+        return movie_detail_url
