@@ -126,3 +126,13 @@ MEDIA_URL = '/media/'
 
 LOGIN_REDIRECT_URL = 'movie:movie_list'
 # LOGIN_REDIRECT_URL = 'user:login'
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'default-locmemcache',
+        'TIMEOUT': 5,
+    }
+}
+
+CSRF_USE_SESSIONS = True

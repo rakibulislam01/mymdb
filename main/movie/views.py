@@ -1,4 +1,7 @@
+# ToDo : use django debugger toolbar.
+import django
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.cache import cache
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import redirect
 from django.urls import reverse
@@ -10,12 +13,16 @@ from django.views.generic import (
 )
 
 from .form import VoteForm, MovieImageForm
+from .mixins import CachePageVaryOnCookieMixin
 from .models import Movie, Person, Vote
 
 
-class MovieList(ListView):
+class MovieList(CachePageVaryOnCookieMixin, ListView):
     model = Movie
     paginate_by = 10
+
+    # def get_context_data(self, *, object_list=None, **kwargs):
+    #     # No change.
 
 
 class MovieDetail(DetailView):
@@ -128,3 +135,19 @@ class MovieImageUpload(LoginRequiredMixin, CreateView):
         movie_id = self.kwargs['movie_id']
         movie_detail_url = reverse('movie:movie_detail', kwargs={'pk': movie_id})
         return movie_detail_url
+
+
+class TopMovie(ListView):
+    template_name = 'movie/top_movies_list.html'
+
+    def get_queryset(self):
+        limit = 10
+        key = 'top_movies_%s' % limit
+        cached_qs = cache.get(key)
+        if cached_qs:
+            same_django = cached_qs._django_version == django.get_version()
+            if same_django:
+                return cached_qs
+        qs = Movie.objects.top_movies(limit=limit)
+        cache.set(key, qs)
+        return qs

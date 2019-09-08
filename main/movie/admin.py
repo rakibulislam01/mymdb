@@ -6,3 +6,7 @@ admin.site.register(Person)
 admin.site.register(Role)
 admin.site.register(Vote)
 admin.site.register(MovieImage)
+
+
+# Todo Django Material Administration
+# Link: https://github.com/MaistrenkoAnton/django-material-admin
