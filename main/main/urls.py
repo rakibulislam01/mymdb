@@ -13,16 +13,24 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
-from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+
+from django.urls import path, include
+from django.utils.translation import ugettext_lazy as _
+
+from material.admin.sites import site
+
+site.site_header = _('mymdb')
+site.site_title = _('mymdb')
+
 
 MEDIA_FILE_PATHS = static(settings.MEDIA_URL,
                           document_root=settings.MEDIA_ROOT)
 
 urlpatterns = [
-                  path('admin/', admin.site.urls),
+                  path('admin/', include('material.admin.urls')),
+                  # path('admin/', admin.site.urls),
                   path('user/', include('user.urls', namespace='user')),
                   path('', include('movie.urls', namespace='movie')),
               ] + MEDIA_FILE_PATHS
