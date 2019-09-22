@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+source /mymdb/venv/bin/activate
+
+if [[ $? != 0 ]]; then
+    echo "no bd server"
+    exit 1
+fi
+
+pushd /mymdb/main
+
+python manage.py migrate
+
+if [[ $? != 0 ]]; then
+    echo "can't migrate"
+    exit 2
+fi
+popd
+
+exec /sbin/setuser www-data \
+    uwsgi \
+    --ini /etc/uwsgi/apps-enabled/mymdb.ini \
+    >> /var/log/uwsgi/mymdb.log \
+    2>&1

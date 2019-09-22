@@ -1,0 +1,7 @@
+export TIMEOUT=100
+export SECRET_KEY='sdfkjsdlfjsdofjweoifjskldj46545646sfsoifu379-0294-49'
+export NAME='mymdb'
+export USER='newuser'
+export PASSWORD='test123456'
+export HOST='127.0.0.1'
+export PORT='5432'
