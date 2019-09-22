@@ -28,7 +28,7 @@ COPY nginx/mymdb.conf /etc/nginx/sites-available/mymdb.conf
 RUN rm /etc/nginx/sites-enabled/*
 RUN ln -s /etc/nginx/sites-available/mymdb.conf /etc/nginx/sites-enabled/mymdb.conf
 
-RUN mkdir /etc/service/nginx
+# RUN mkdir /etc/service/nginx
 COPY runit/nginx /etc/service/nginx
 RUN chmod +x /etc/service/nginx/run
 

@@ -2,6 +2,7 @@
 
 source /mymdb/venv/bin/activate
 
+# shellcheck disable=SC2181
 if [[ $? != 0 ]]; then
     echo "no bd server"
     exit 1
