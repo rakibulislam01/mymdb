@@ -4,10 +4,10 @@ root=$1
 # shellcheck disable=SC2086
 source ${root}/venv/bin/activate
 
-export DJANGO_CASHE_TIMEOUT=100
+export DJANGO_CACHE_TIMEOUT=100
+export DJANGO_SECRET_KEY=FAKE_KEY
 export DJANGO_SETTINGS_MODULE=main.settings
 
-export TIMEOUT=100
 
 # shellcheck disable=SC2164
 # shellcheck disable=SC2086
