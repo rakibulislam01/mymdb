@@ -1,6 +1,6 @@
 boto3==1.9.224
 botocore==1.12.224
-Django==2.2.5
+Django==2.2.10
 django-material-admin==1.4.6
 django-storages==1.7.1
 docutils==0.15.2
